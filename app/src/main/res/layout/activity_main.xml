@@ -27,6 +27,6 @@
         app:strokeColor="#80F2F2F2"
         app:backgroundColor="#4DF2F2F2"
         app:includeBadgePadding="true"
-        android:text="GIF"/>
+        android:text="LABEL"/>
 
 </RelativeLayout>

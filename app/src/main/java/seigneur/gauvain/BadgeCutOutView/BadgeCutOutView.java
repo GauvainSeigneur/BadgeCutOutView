@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -26,7 +27,7 @@ import android.view.View;
  */
 public class BadgeCutOutView extends View {
     //View attributes
-    private int mBackgroundColor=android.R.color.background_light;
+    private int mBackgroundColor;
     private String mText;
     private float mTextSize;
     private float mCornerRadius;
@@ -94,6 +95,8 @@ public class BadgeCutOutView extends View {
         if (a.hasValue(R.styleable.BadgeCutOutView_backgroundColor)) {
             mBackgroundColor = a.getColor(R.styleable.BadgeCutOutView_backgroundColor,
                     mBackgroundColor);
+        } else {
+            mBackgroundColor = ContextCompat.getColor(context, R.color.defaultBadgeBackgroundColor);
         }
         if (a.hasValue(R.styleable.BadgeCutOutView_cornerRadius)) {
             mCornerRadius = a.getDimension(R.styleable.BadgeCutOutView_cornerRadius,
@@ -103,8 +106,9 @@ public class BadgeCutOutView extends View {
             mText = a.getString(R.styleable.BadgeCutOutView_android_text);
         }
         if (a.hasValue(R.styleable.BadgeCutOutView_textSize)) {
-            //it is textView so, use getDimensionPixelSize instead of getDimension
             mTextSize = a.getDimensionPixelSize(R.styleable.BadgeCutOutView_textSize,0);
+        } else {
+            mTextSize = context.getResources().getDimension(R.dimen.default_badge_text_size);
         }
         if (a.hasValue(R.styleable.BadgeCutOutView_centerBadgeText)) {
             mIsCenterBadgeText = a.getBoolean(R.styleable.BadgeCutOutView_centerBadgeText,false);

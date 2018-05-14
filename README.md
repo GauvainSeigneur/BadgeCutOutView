@@ -3,12 +3,12 @@ A badge view which include a punched (transparent) textView
 
 | Attribute Name| Default value | Description  |
 | ------------- | ------------- | -------------|
-| backgroundColor|#ffffffff|background color of the view|
-| cornerRadius|0dp|set corner radius of the view|
-| badgeStroke|0dp|set badge stroke dimension|
-| strokeColor|backgroundColor|define a color for stroke |
-| includeBadgePadding|true|default padding set around textView(8dp)|
-| centerBadgeText|false|center text inside the view|
+| backgroundColor|#F2F2F2|Background color of the view|
+| cornerRadius|0dp|Set corner radius of the view|
+| badgeStroke|0dp|Set badge stroke dimension|
+| strokeColor|backgroundColor|Define a color for stroke |
+| includeBadgePadding|true|Default padding set around textView(8dp)|
+| centerBadgeText|false|Center text inside the view|
 | text|null|Set text inside badge|
-| textSize|12sp|Define textSize|
+| textSize|12sp|Define textSize (sp)|
 | fontFamily|null|Define a font for the text with default Android Studio method|
