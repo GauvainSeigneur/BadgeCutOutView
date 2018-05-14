@@ -26,7 +26,7 @@ import android.view.View;
  */
 public class BadgeCutOutView extends View {
     //View attributes
-    private int mBackgroundColor;
+    private int mBackgroundColor=android.R.color.background_light;
     private String mText;
     private float mTextSize;
     private float mCornerRadius;
