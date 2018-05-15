@@ -1,10 +1,13 @@
 apply plugin: 'com.android.library'
 
+ext {
+    PUBLISH_GROUP_ID = 'gauvain.seigneur'
+    PUBLISH_ARTIFACT_ID = 'badge-cut-out'
+    PUBLISH_VERSION = '0.5'
+}
+
 android {
     compileSdkVersion 27
-
-
-
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 27
@@ -32,3 +35,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'
