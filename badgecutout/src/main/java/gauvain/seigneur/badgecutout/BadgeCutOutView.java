@@ -46,6 +46,7 @@ public class BadgeCutOutView extends View {
     private Canvas mCutoutCanvas;
     private Rect mTextBounds;
     private float mTextHeight;
+    private float mTextWidth;
     private float mBadgePadding; //default badge padding is set in addition to android Padding attributes
     float mYTextPosition;
     float mXTextPosition;
@@ -111,14 +112,9 @@ public class BadgeCutOutView extends View {
             mTextSize = context.getResources().getDimension(R.dimen.default_badge_text_size);
         }
         if (a.hasValue(R.styleable.BadgeCutOutView_centerBadgeText)) {
-            mIsCenterBadgeText = a.getBoolean(R.styleable.BadgeCutOutView_centerBadgeText,false);
-            if (!mIsCenterBadgeText) {
-                isTextCenteredInBadge=false;
-            } else {
-                isTextCenteredInBadge=true;
-            }
+            mIsCenterBadgeText = a.getBoolean(R.styleable.BadgeCutOutView_centerBadgeText,true);
         } else {
-            isTextCenteredInBadge=false;
+            mIsCenterBadgeText=false;
         }
         if (a.hasValue(R.styleable.BadgeCutOutView_includeBadgePadding)) {
             mIsIncludeBadgePadding = a.getBoolean(R.styleable.BadgeCutOutView_includeBadgePadding,true);
@@ -149,13 +145,18 @@ public class BadgeCutOutView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawBitmap(mCutout, 0, 0, null);
+        Log.d("badgeTextWitdh",""+String.valueOf(mTextWidth)+" "+String.valueOf(mTextBounds.width())+
+                " "+String.valueOf(getWidth()));
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int desiredWidth = (mTextBounds.width() + getPaddingLeft() + getPaddingRight()) +((int)  getBadgePadding()*2) +((int) getBadgeStroke()*2);
-        int desiredHeight = (mTextBounds.height() + getPaddingTop() + getPaddingBottom())+((int)  getBadgePadding()*2) +((int) getBadgeStroke()*2);
+        int desiredWidth = (mTextBounds.width()+ getPaddingLeft() + getPaddingRight()) +((int)  getBadgePadding()*2) +((int) getBadgeStroke()*2);
+        int desiredHeight = (mTextBounds.height() + getPaddingTop() + getPaddingBottom())+((int)  getBadgePadding()*2); //+((int) getBadgeStroke()*2);
+
+        Log.d("onMeasure",""+String.valueOf(desiredWidth)+" "+String.valueOf(desiredHeight)+
+                " "+String.valueOf(getWidth()));
         setMeasuredDimension(measureDimension(desiredWidth, widthMeasureSpec), measureDimension(desiredHeight, heightMeasureSpec));
     }
 
@@ -180,7 +181,7 @@ public class BadgeCutOutView extends View {
         defineTextView();
         defineStrokeRectView();
         defineRectView();
-        if (isTextCenteredInBadge) {
+        if (mIsCenterBadgeText) {
             mYTextPosition = centeredYTextPosition();
             mXTextPosition = centeredXTextPosition();
         } else {
@@ -188,6 +189,7 @@ public class BadgeCutOutView extends View {
             mXTextPosition = freeXTextPosition();
         }
         defineTextBounds();
+        Log.d("initViews",String.valueOf(mXTextPosition)+" "+String.valueOf(freeXTextPosition()));
     }
 
     /**
@@ -197,7 +199,7 @@ public class BadgeCutOutView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(mBackgroundColor);
         mRectF.left = getBadgeStroke();
-        mRectF.right = getWidth()-getBadgeStroke();
+        mRectF.right = getWidth()+getBadgeStroke();
         mRectF.top = getBadgeStroke();
         mRectF.bottom = getHeight()-getBadgeStroke();
     }
@@ -224,6 +226,7 @@ public class BadgeCutOutView extends View {
         mTextPaint.setTextSize(mTextSize);
         // this is the magic – Clear mode punches out the bitmap
         mTextPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+
     }
 
     /**
@@ -232,6 +235,10 @@ public class BadgeCutOutView extends View {
     private void defineTextBounds() {
         mTextPaint.getTextBounds(mText, 0, mText.length(), mTextBounds);
         mTextHeight = mTextBounds.height();
+        mTextWidth = mTextPaint.measureText(mText);
+
+
+        Log.d("defineTextBounds",String.valueOf(mText.length()));
     }
 
     /**
@@ -291,9 +298,10 @@ public class BadgeCutOutView extends View {
      * @return vertical position
      */
     public float freeYTextPosition() {
-        float paddingBottom=getPaddingBottom()+(getBadgePadding()/2)+(getBadgeStroke());
+        float paddingBottom=getPaddingBottom()+(getBadgePadding())+(getBadgeStroke());
         float paddingTop=getPaddingTop()+(getBadgePadding())+(getBadgeStroke());
         float heightOfView=(mTextBounds.height() + paddingBottom + paddingTop);
+        Log.d("freeYTextPosition", " "+String.valueOf(heightOfView));
         return heightOfView-paddingBottom;
     }
 
@@ -302,10 +310,20 @@ public class BadgeCutOutView extends View {
      * @return horizontal position
      */
     public float freeXTextPosition() {
-        float paddingLeft=getPaddingLeft()+(getBadgePadding())+(getBadgeStroke());
-        float paddingRight=getPaddingRight()+(getBadgePadding()/2)+(getBadgeStroke());
+        /*float paddingLeft=getPaddingLeft()+(getBadgePadding())+(getBadgeStroke());
+        float paddingRight=getPaddingRight()+(getBadgePadding())+(getBadgeStroke());
         float widthOfView=mTextBounds.width() + paddingLeft + paddingRight;
-        return widthOfView-mTextBounds.width()-paddingRight;
+        return widthOfView-widthOfView-paddingRight;*/
+
+        float paddingLeft=getPaddingLeft()+(getBadgePadding())+(getBadgeStroke());
+        float paddingRight=getPaddingRight()+(getBadgePadding())+(getBadgeStroke())+getBadgeStroke()/2;
+        float widthOfView=mTextBounds.width() + paddingLeft + paddingRight;
+        Log.d("badgeTextXPos", " "+String.valueOf(widthOfView)+ " "+
+                String.valueOf(mTextBounds.width()-paddingRight));
+        return mTextBounds.width()- widthOfView-paddingRight;
+
+
+
     }
 
     /**
@@ -321,7 +339,7 @@ public class BadgeCutOutView extends View {
      * @return the position of text centered
      */
     public float centeredXTextPosition() {
-        return getWidth()/2 - (mTextPaint.measureText(mText) / 2);
+        return getWidth()/2 - (mTextBounds.width() / 2);
     }
 
     /**
