@@ -10,13 +10,13 @@ Not stable yet.
 
 ## Set up
 ### 1.Gradle 
-```
+```CoffeeScript
 dependencies {
-implementation 'gauvain.seigneur:badge-cut-out-view:0.5'
+    implementation 'gauvain.seigneur:badge-cut-out-view:0.5'
 }
 ```
 ### 2.Maven
-```maven
+```
 <dependency>
   <groupId>gauvain.seigneur</groupId>
   <artifactId>badge-cut-out-view</artifactId>
