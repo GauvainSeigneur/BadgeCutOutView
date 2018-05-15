@@ -10,7 +10,7 @@ Not stable yet.
 
 ## Set up
 ### 1.Gradle 
-```CoffeeScript
+```
 dependencies {
     implementation 'gauvain.seigneur:badge-cut-out-view:0.5'
 }
