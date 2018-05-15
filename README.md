@@ -12,7 +12,7 @@ Not stable yet.
 ### 1.Gradle 
 ```
 dependencies {
-    implementation 'gauvain.seigneur:badge-cut-out-view:0.5'
+    implementation 'gauvain.seigneur:badge-cut-out-view:0.6'
 }
 ```
 ### 2.Maven
@@ -20,7 +20,7 @@ dependencies {
 <dependency>
   <groupId>gauvain.seigneur</groupId>
   <artifactId>badge-cut-out-view</artifactId>
-  <version>0.5</version>
+  <version>0.6</version>
   <type>pom</type>
 </dependency>
 ```
