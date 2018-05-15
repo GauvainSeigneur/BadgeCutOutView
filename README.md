@@ -53,3 +53,23 @@ implementation 'gauvain.seigneur:badge-cut-out-view:0.5'
 | text|null|Set text inside badge|
 | textSize|12sp|Define textSize (sp)|
 | fontFamily|null|Define a font for the text with default Android Studio method|
+
+## App that use this library
+If you're using this library in your app If you're using this library in your app please let me know via email, pull requests or issues.
+
+## Licence
+```
+Copyright 2018 Gauvain Seigneur
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
