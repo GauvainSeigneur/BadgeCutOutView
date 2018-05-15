@@ -339,7 +339,7 @@ public class BadgeCutOutView extends View {
      * @return the position of text centered
      */
     public float centeredXTextPosition() {
-        return getWidth()/2 - (mTextBounds.width() / 2);
+        return getWidth()/2 - (mTextBounds.width() / 2)-mTextBounds.left;
     }
 
     /**
