@@ -5,6 +5,8 @@ A badge view which include a punched (transparent) textView
 Not stable yet.
 
 ## Todo
+* Shadow elevation
+* Refactoring text positioning
 
 ## Set up
 ### 1.Gradle 
@@ -22,8 +24,24 @@ implementation 'gauvain.seigneur:badge-cut-out-view:0.5'
 ```
 ## Usage
 ### 1.xml layout 
-
-### 1.Options 
+```xml
+ <gauvain.seigneur.badgecutout.BadgeCutOutView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingTop="0dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="0dp"
+        app:cornerRadius="8dp"
+        app:textSize="18sp"
+        app:centerBadgeText="false"
+        app:badgeStroke="4dp"
+        app:strokeColor="#80F2F2F2"
+        app:backgroundColor="#4DF2F2F2"
+        app:includeBadgePadding="true"
+        android:text="LABEL"/>
+```
+### 2.Options 
 | Attribute Name| Default value | Description  |
 | ------------- | ------------- | -------------|
 | backgroundColor|#F2F2F2|Background color of the view|
