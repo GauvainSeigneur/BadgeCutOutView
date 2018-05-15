@@ -199,7 +199,7 @@ public class BadgeCutOutView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(mBackgroundColor);
         mRectF.left = getBadgeStroke();
-        mRectF.right = getWidth()+getBadgeStroke();
+        mRectF.right = getWidth()-getBadgeStroke();
         mRectF.top = getBadgeStroke();
         mRectF.bottom = getHeight()-getBadgeStroke();
     }
