@@ -16,11 +16,14 @@
     <gauvain.seigneur.badgecutout.BadgeCutOutView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cornerRadius="0dp"
+        app:cornerRadius="32dp"
         app:textSize="96sp"
-        app:centerBadgeText="false"
+        app:centerBadgeText="true"
+        app:badgeStroke="4dp"
+        app:strokeColor="#FFFFFF"
         app:backgroundColor="@color/colorAccent"
-        app:includeBadgePadding="false"
+        app:includeBadgePadding="true"
+        android:padding="16dp"
         android:text="LABEL"/>
 
 </RelativeLayout>

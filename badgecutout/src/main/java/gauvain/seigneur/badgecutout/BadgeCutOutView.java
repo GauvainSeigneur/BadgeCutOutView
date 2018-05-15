@@ -153,7 +153,7 @@ public class BadgeCutOutView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int desiredWidth = (mTextBounds.width()+ getPaddingLeft() + getPaddingRight()) +((int)  getBadgePadding()*2) +((int) getBadgeStroke()*2);
-        int desiredHeight = (mTextBounds.height() + getPaddingTop() + getPaddingBottom())+((int)  getBadgePadding()*2); //+((int) getBadgeStroke()*2);
+        int desiredHeight = (mTextBounds.height() + getPaddingTop() + getPaddingBottom())+((int)  getBadgePadding()*2)+((int) getBadgeStroke()*2);
 
         Log.d("onMeasure",""+String.valueOf(desiredWidth)+" "+String.valueOf(desiredHeight)+
                 " "+String.valueOf(getWidth()));
@@ -299,7 +299,7 @@ public class BadgeCutOutView extends View {
      */
     public float freeYTextPosition() {
         float paddingBottom=getPaddingBottom()+(getBadgePadding())+(getBadgeStroke());
-        float paddingTop=getPaddingTop()+(getBadgePadding())+(getBadgeStroke());
+        float paddingTop=getPaddingTop()+(getBadgePadding())+getBadgeStroke();
         float heightOfView=(mTextBounds.height() + paddingBottom + paddingTop);
         Log.d("freeYTextPosition", " "+String.valueOf(heightOfView));
         return heightOfView-paddingBottom;
@@ -316,11 +316,11 @@ public class BadgeCutOutView extends View {
         return widthOfView-widthOfView-paddingRight;*/
 
         float paddingLeft=getPaddingLeft()+(getBadgePadding())+(getBadgeStroke());
-        float paddingRight=getPaddingRight()+(getBadgePadding())+(getBadgeStroke())+getBadgeStroke()/2;
+        float paddingRight=getPaddingRight()+(getBadgePadding());
         float widthOfView=mTextBounds.width() + paddingLeft + paddingRight;
         Log.d("badgeTextXPos", " "+String.valueOf(widthOfView)+ " "+
                 String.valueOf(mTextBounds.width()-paddingRight));
-        return mTextBounds.width()- widthOfView-paddingRight;
+        return widthOfView - mTextBounds.width() -paddingRight-mTextBounds.left;
 
 
 
