@@ -15,12 +15,15 @@
         app:cornerRadius="48dp"
         app:textSize="24sp"
         app:centerBadgeText="true"
-        app:badgeStroke="0dp"
-        app:strokeColor="@color/colorPrimaryDark"
+        app:badgeStroke="2dp"
+        app:strokeColor="@color/colorPrimary"
         app:backgroundColor="@color/colorAccent"
         app:includeBadgePadding="true"
-        android:padding="8dp"
+        android:padding="4dp"
         android:elevation="16dp"
+        app:elevationAlpha="1"
+        app:shadowColor="@color/colorAccent"
+        app:shadowScale="2"
         android:text="LABEL"/>
 
 </FrameLayout>

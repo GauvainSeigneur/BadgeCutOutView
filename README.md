@@ -27,21 +27,23 @@ dependencies {
 ## Usage
 ### 1.xml layout 
 ```xml
- <gauvain.seigneur.badgecutout.BadgeCutOutView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="8dp"
-        android:paddingTop="0dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="0dp"
-        app:cornerRadius="8dp"
-        app:textSize="18sp"
-        app:centerBadgeText="false"
-        app:badgeStroke="4dp"
-        app:strokeColor="#80F2F2F2"
-        app:backgroundColor="#4DF2F2F2"
-        app:includeBadgePadding="true"
-        android:text="LABEL"/>
+<gauvain.seigneur.badgecutout.BadgeCutOutView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:cornerRadius="16dp"
+    app:textSize="12sp"
+    app:centerBadgeText="true"
+    app:badgeStroke="2dp"
+    app:strokeColor="@color/colorPrimary"
+    app:backgroundColor="@color/colorAccent"
+    app:includeBadgePadding="true"
+    android:padding="4dp"
+    android:elevation="16dp"
+    app:elevationAlpha="0.75"
+    app:shadowColor="@color/colorPrimary"
+    app:shadowScale="2"
+    android:text="LABEL"/>
 ```
 ### 2.Options 
 | Attribute Name| Default value | Description  |
@@ -55,8 +57,10 @@ dependencies {
 | android:text|null|Set text inside badge|
 | app:textSize|12sp|Define textSize (sp)|
 | android:fontFamily|null|Define a font for the text with default Android Studio method|
-| android:elevation|0|Define elevation of the view and shadow in accordance|
-| app:elevationAlpha|0.5|Define alpha of the shadow (above 0.80 it's become ugly)|
+| android:elevation|0dp|Define elevation of the view and shadow in accordance|
+| app:elevationAlpha|0.5f|Define alpha of the shadow (above 0.80 its become ugly)|
+| app:shadowColor|#FF000000|Define color of the shadow|
+| app:shadowScale|1f|Define the size of shadow (increase value will increase the size of the shadow)|
 
 ## App that use this library
 If you're using this library in your app If you're using this library in your app please let me know via email, pull requests or issues.
