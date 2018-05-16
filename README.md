@@ -58,7 +58,7 @@ dependencies {
 | app:textSize|12sp|Define textSize (sp)|
 | android:fontFamily|null|Define a font for the text with default Android Studio method|
 | android:elevation|0dp|Define elevation of the view and shadow in accordance|
-| app:elevationAlpha|0.5f|Define alpha of the shadow (above 0.80 its become ugly)|
+| app:elevationAlpha|0.5f|Define alpha of the shadow|
 | app:shadowColor|#FF000000|Define color of the shadow|
 | app:shadowScale|1f|Define the size of shadow (increase value will increase the size of the shadow)|
 
