@@ -4,14 +4,20 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +26,12 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import static android.graphics.Bitmap.Config.ALPHA_8;
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.TRANSPARENT;
+import static android.graphics.Paint.ANTI_ALIAS_FLAG;
+import static android.graphics.PorterDuff.Mode.SRC_IN;
 
 /**
  * Badge View with punched Textview
@@ -46,11 +58,12 @@ public class BadgeCutOutView extends View {
     private Canvas mCutoutCanvas;
     private Rect mTextBounds;
     private float mTextHeight;
-    private float mTextWidth;
     private float mBadgePadding; //default badge padding is set in addition to android Padding attributes
     float mYTextPosition;
     float mXTextPosition;
-    boolean isTextCenteredInBadge;
+    private float mShadowBlurRadius = 0f; //max:25
+    private Paint mShadowPaint;
+    private RectF mShadowRect;
 
     public BadgeCutOutView(Context context) {
         super(context);
@@ -81,6 +94,8 @@ public class BadgeCutOutView extends View {
         mRect = new Rect();
         mRectF = new RectF(mRect);
         mStrokeRectF = new RectF(mRect);
+        mShadowPaint = new Paint(ANTI_ALIAS_FLAG);
+        mShadowRect= new RectF(mRect);
 
         final TypedArray a = getContext().obtainStyledAttributes(set, R.styleable.BadgeCutOutView, 0, 0);
         if (a.hasValue(R.styleable.BadgeCutOutView_android_fontFamily)) {
@@ -139,24 +154,20 @@ public class BadgeCutOutView extends View {
         a.recycle();
         //init view first time
         initViews();
+        //setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawBitmap(mCutout, 0, 0, null);
-        Log.d("badgeTextWitdh",""+String.valueOf(mTextWidth)+" "+String.valueOf(mTextBounds.width())+
-                " "+String.valueOf(getWidth()));
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int desiredWidth = (mTextBounds.width()+ getPaddingLeft() + getPaddingRight()) +((int)  getBadgePadding()*2) +((int) getBadgeStroke()*2);
-        int desiredHeight = (mTextBounds.height() + getPaddingTop() + getPaddingBottom())+((int)  getBadgePadding()*2)+((int) getBadgeStroke()*2);
-
-        Log.d("onMeasure",""+String.valueOf(desiredWidth)+" "+String.valueOf(desiredHeight)+
-                " "+String.valueOf(getWidth()));
+        int desiredWidth = (mTextBounds.width() + getPaddingLeft() + getPaddingRight()) + ((int) getBadgePadding() * 2) + ((int) getBadgeStroke() * 2)+ ((int) (mShadowBlurRadius* 2));
+        int desiredHeight = (mTextBounds.height() + getPaddingTop() + getPaddingBottom()) + ((int) getBadgePadding() * 2) + ((int) getBadgeStroke() * 2)+ ((int) mShadowBlurRadius*2);
         setMeasuredDimension(measureDimension(desiredWidth, widthMeasureSpec), measureDimension(desiredHeight, heightMeasureSpec));
     }
 
@@ -189,7 +200,7 @@ public class BadgeCutOutView extends View {
             mXTextPosition = freeXTextPosition();
         }
         defineTextBounds();
-        Log.d("initViews",String.valueOf(mXTextPosition)+" "+String.valueOf(freeXTextPosition()));
+        defineRectShadow();
     }
 
     /**
@@ -198,10 +209,10 @@ public class BadgeCutOutView extends View {
     private void defineRectView () {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(mBackgroundColor);
-        mRectF.left = getBadgeStroke();
-        mRectF.right = getWidth()-getBadgeStroke();
-        mRectF.top = getBadgeStroke();
-        mRectF.bottom = getHeight()-getBadgeStroke();
+        mRectF.left = getBadgeStroke()+mShadowBlurRadius;
+        mRectF.right = getWidth() - getBadgeStroke()-mShadowBlurRadius;
+        mRectF.top = getBadgeStroke()+mShadowBlurRadius;
+        mRectF.bottom = getHeight() - getBadgeStroke()-mShadowBlurRadius;
     }
 
     /**
@@ -212,10 +223,27 @@ public class BadgeCutOutView extends View {
             mStrokePaint.setStyle(Paint.Style.STROKE);
             mStrokePaint.setColor(mStrokeColor);
             mStrokePaint.setStrokeWidth(getBadgeStroke());
-            mStrokeRectF.left = getBadgeStroke()/2;
-            mStrokeRectF.right = getWidth()-getBadgeStroke()/2;
-            mStrokeRectF.top = getBadgeStroke()/2;
-            mStrokeRectF.bottom = getHeight()-getBadgeStroke()/2;
+            mStrokeRectF.left = getBadgeStroke()/2+mShadowBlurRadius;
+            mStrokeRectF.right = getWidth() - getBadgeStroke()/2-mShadowBlurRadius;
+            mStrokeRectF.top = getBadgeStroke() / 2+mShadowBlurRadius;
+            mStrokeRectF.bottom = getHeight() - getBadgeStroke() / 2-mShadowBlurRadius;
+        }
+    }
+
+    /**
+     * Define rect of shadow around the view
+     */
+    private void defineRectShadow () {
+        if(mShadowBlurRadius>0f) {
+            mShadowPaint.setStyle(Paint.Style.FILL);
+            mShadowPaint.setColorFilter(new PorterDuffColorFilter(BLACK, SRC_IN));
+            mShadowPaint.setAlpha(200); // 20%. Could make this an attr?
+            //mShadowPaint.setColor(BLACK);
+            mShadowPaint.setMaskFilter(new BlurMaskFilter(mShadowBlurRadius, BlurMaskFilter.Blur.NORMAL));
+            mShadowRect.left = 0+mShadowBlurRadius;
+            mShadowRect.right = getWidth()-mShadowBlurRadius;
+            mShadowRect.top = 0+mShadowBlurRadius;
+            mShadowRect.bottom = getHeight()-mShadowBlurRadius;
         }
     }
 
@@ -226,7 +254,6 @@ public class BadgeCutOutView extends View {
         mTextPaint.setTextSize(mTextSize);
         // this is the magic – Clear mode punches out the bitmap
         mTextPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-
     }
 
     /**
@@ -235,9 +262,6 @@ public class BadgeCutOutView extends View {
     private void defineTextBounds() {
         mTextPaint.getTextBounds(mText, 0, mText.length(), mTextBounds);
         mTextHeight = mTextBounds.height();
-        mTextWidth = mTextPaint.measureText(mText);
-
-
         Log.d("defineTextBounds",String.valueOf(mText.length()));
     }
 
@@ -255,9 +279,21 @@ public class BadgeCutOutView extends View {
         mCutout = Bitmap.createBitmap(getWidth(),getHeight(), Bitmap.Config.ARGB_8888);
         mCutout.setHasAlpha(true);
         mCutoutCanvas = new Canvas(mCutout);
+        //draw shadow first in order to hide it with the next drawing...
+        if(mShadowBlurRadius>0f) {
+            mCutoutCanvas.drawRoundRect(mShadowRect,
+                    setStrokeCornerRadius(),
+                    setStrokeCornerRadius(),
+                    mShadowPaint);
+        }
         //inner rectf
         mCutoutCanvas.drawRoundRect(mRectF, getCornerRadius(), getCornerRadius(), mPaint);
         //outer rectF (for stroke)
+        mCutoutCanvas.drawRoundRect(mStrokeRectF,
+                setStrokeCornerRadius(),
+                setStrokeCornerRadius(),
+                mStrokePaint);
+        //draw stroke rect
         mCutoutCanvas.drawRoundRect(mStrokeRectF,
                 setStrokeCornerRadius(),
                 setStrokeCornerRadius(),
@@ -298,10 +334,9 @@ public class BadgeCutOutView extends View {
      * @return vertical position
      */
     public float freeYTextPosition() {
-        float paddingBottom=getPaddingBottom()+(getBadgePadding())+(getBadgeStroke());
-        float paddingTop=getPaddingTop()+(getBadgePadding())+getBadgeStroke();
+        float paddingBottom=getPaddingBottom()+(getBadgePadding())+(getBadgeStroke())+mShadowBlurRadius;
+        float paddingTop=getPaddingTop()+(getBadgePadding())+getBadgeStroke()+mShadowBlurRadius;
         float heightOfView=(mTextBounds.height() + paddingBottom + paddingTop);
-        Log.d("freeYTextPosition", " "+String.valueOf(heightOfView));
         return heightOfView-paddingBottom;
     }
 
@@ -310,20 +345,10 @@ public class BadgeCutOutView extends View {
      * @return horizontal position
      */
     public float freeXTextPosition() {
-        /*float paddingLeft=getPaddingLeft()+(getBadgePadding())+(getBadgeStroke());
-        float paddingRight=getPaddingRight()+(getBadgePadding())+(getBadgeStroke());
+        float paddingLeft=getPaddingLeft()+(getBadgePadding())+(getBadgeStroke())+mShadowBlurRadius;
+        float paddingRight=getPaddingRight()+(getBadgePadding())+mShadowBlurRadius;
         float widthOfView=mTextBounds.width() + paddingLeft + paddingRight;
-        return widthOfView-widthOfView-paddingRight;*/
-
-        float paddingLeft=getPaddingLeft()+(getBadgePadding())+(getBadgeStroke());
-        float paddingRight=getPaddingRight()+(getBadgePadding());
-        float widthOfView=mTextBounds.width() + paddingLeft + paddingRight;
-        Log.d("badgeTextXPos", " "+String.valueOf(widthOfView)+ " "+
-                String.valueOf(mTextBounds.width()-paddingRight));
         return widthOfView - mTextBounds.width() -paddingRight-mTextBounds.left;
-
-
-
     }
 
     /**
@@ -375,4 +400,5 @@ public class BadgeCutOutView extends View {
         return getCornerRadius()*strokeCornerRadiusScale;
 
     }
+
 }

@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 ext {
     PUBLISH_GROUP_ID = 'gauvain.seigneur'
-    PUBLISH_ARTIFACT_ID = 'badge-cut-out'
+    PUBLISH_ARTIFACT_ID = 'badge-cut-out-view'
     PUBLISH_VERSION = '0.6'
 }
 
