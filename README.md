@@ -5,8 +5,8 @@ A badge view which include a punched (transparent) textView
 Not stable yet.
 
 ## Todo
-* Shadow elevation
-* Refactoring text positioning
+* Define shadow bounds according to Material Design 
+* Shadow color as attribute
 
 ## Set up
 ### 1.Gradle 
@@ -46,15 +46,17 @@ dependencies {
 ### 2.Options 
 | Attribute Name| Default value | Description  |
 | ------------- | ------------- | -------------|
-| backgroundColor|#F2F2F2|Background color of the view|
-| cornerRadius|0dp|Set corner radius of the view|
-| badgeStroke|0dp|Set badge stroke dimension|
-| strokeColor|backgroundColor|Define a color for stroke |
-| includeBadgePadding|true|Default padding set around textView(8dp)|
-| centerBadgeText|false|Center text inside the view|
-| text|null|Set text inside badge|
-| textSize|12sp|Define textSize (sp)|
-| fontFamily|null|Define a font for the text with default Android Studio method|
+| app:backgroundColor|#F2F2F2|Background color of the view|
+| app:cornerRadius|0dp|Set corner radius of the view|
+| app:badgeStroke|0dp|Set badge stroke dimension|
+| app:strokeColor|backgroundColor|Define a color for stroke |
+| app:includeBadgePadding|true|Default padding set around textView(8dp)|
+| app:centerBadgeText|true|Center text inside the view|
+| android:text|null|Set text inside badge|
+| app:textSize|12sp|Define textSize (sp)|
+| android:fontFamily|null|Define a font for the text with default Android Studio method|
+| android:elevation|0|Define elevation of the view and shadow in accordance|
+| app:elevationAlpha|0.5|Define alpha of the shadow (above 0.80 it's become ugly)|
 
 ## App that use this library
 If you're using this library in your app If you're using this library in your app please let me know via email, pull requests or issues.

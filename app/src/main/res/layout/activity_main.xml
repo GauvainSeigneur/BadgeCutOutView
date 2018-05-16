@@ -1,30 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:gravity="center"
     tools:context=".MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
     <gauvain.seigneur.badgecutout.BadgeCutOutView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         app:cornerRadius="48dp"
-        app:textSize="96sp"
+        app:textSize="24sp"
         app:centerBadgeText="true"
-        app:badgeStroke="4dp"
+        app:badgeStroke="0dp"
         app:strokeColor="@color/colorPrimaryDark"
         app:backgroundColor="@color/colorAccent"
         app:includeBadgePadding="true"
-        android:padding="16dp"
+        android:padding="8dp"
+        android:elevation="16dp"
         android:text="LABEL"/>
 
-
-</RelativeLayout>
+</FrameLayout>

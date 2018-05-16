@@ -10,5 +10,7 @@
         <attr name="android:text"                               />
         <attr name="textSize"               format="dimension"  />
         <attr name="android:fontFamily"                         />
+        <attr name="android:elevation"      format="dimension"  />
+        <attr name="elevationAlpha"         format="float"      />
     </declare-styleable>
 </resources>

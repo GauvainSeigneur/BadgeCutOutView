@@ -25,6 +25,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 
 import static android.graphics.Bitmap.Config.ALPHA_8;
@@ -47,6 +48,9 @@ public class BadgeCutOutView extends View {
     private int mStrokeColor;
     private boolean mIsIncludeBadgePadding;
     private boolean mIsCenterBadgeText;
+    private float mShadowAlpha=0.5f;
+    private float mElevationDimension;
+    private int mElevationDimensionInDP;
     //internal
     private TextPaint mTextPaint;
     private Paint mPaint;
@@ -148,8 +152,21 @@ public class BadgeCutOutView extends View {
             mBadgeStroke = 0;
         }
         if (a.hasValue(R.styleable.BadgeCutOutView_strokeColor)) {
-            mStrokeColor = a.getColor(R.styleable.BadgeCutOutView_strokeColor,
-                    mBackgroundColor);
+            mStrokeColor = a.getColor(R.styleable.BadgeCutOutView_strokeColor, mBackgroundColor);
+        }
+        if (a.hasValue(R.styleable.BadgeCutOutView_android_elevation)) {
+            mElevationDimension = a.getDimension(R.styleable.BadgeCutOutView_android_elevation,0);
+            mElevationDimensionInDP =  (int) (mElevationDimension/ getResources().getDisplayMetrics().density);
+            if(mElevationDimensionInDP>25){
+                mShadowBlurRadius=25*0.5f;
+            } else {
+                mShadowBlurRadius=mElevationDimensionInDP*0.5f;
+            }
+        } else {
+            mShadowBlurRadius = 0;
+        }
+        if (a.hasValue(R.styleable.BadgeCutOutView_elevationAlpha)) {
+            mShadowAlpha = a.getFloat(R.styleable.BadgeCutOutView_elevationAlpha,0.5f);
         }
         a.recycle();
         //init view first time
@@ -161,6 +178,7 @@ public class BadgeCutOutView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawBitmap(mCutout, 0, 0, null);
+        Log.d("badgeElevation",String.valueOf(mElevationDimensionInDP));
     }
 
     @Override
@@ -237,7 +255,7 @@ public class BadgeCutOutView extends View {
         if(mShadowBlurRadius>0f) {
             mShadowPaint.setStyle(Paint.Style.FILL);
             mShadowPaint.setColorFilter(new PorterDuffColorFilter(BLACK, SRC_IN));
-            mShadowPaint.setAlpha(200); // 20%. Could make this an attr?
+            mShadowPaint.setAlpha((int)(255*mShadowAlpha));
             //mShadowPaint.setColor(BLACK);
             mShadowPaint.setMaskFilter(new BlurMaskFilter(mShadowBlurRadius, BlurMaskFilter.Blur.NORMAL));
             mShadowRect.left = 0+mShadowBlurRadius;
