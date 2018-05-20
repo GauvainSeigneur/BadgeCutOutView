@@ -265,10 +265,13 @@ public class BadgeCutOutView extends View {
             mShadowPaint.setColorFilter(new PorterDuffColorFilter(mShadowColor, SRC_IN));
             mShadowPaint.setAlpha((int)(255*mShadowAlpha));
             mShadowPaint.setMaskFilter(new BlurMaskFilter(mShadowBlurRadius, BlurMaskFilter.Blur.NORMAL));
-            mShadowRect.left = 0+mShadowBlurRadius;
-            mShadowRect.right = getWidth()-mShadowBlurRadius;
-            mShadowRect.top = 0+mShadowBlurRadius;
-            mShadowRect.bottom = getHeight()-mShadowBlurRadius;
+            //Position the shadow rect according to the elevation value:
+            //Allow visibility of shadow without set blur limit visible to user...
+            mShadowRect.left = mShadowBlurRadius*(1f+(mElevationDimensionInDP/100f));
+            mShadowRect.right = getWidth()-mShadowBlurRadius*(1f+(mElevationDimensionInDP/100f));
+            mShadowRect.top = mShadowBlurRadius*(1f+(mElevationDimensionInDP/100f));
+            mShadowRect.bottom = getHeight()-mShadowBlurRadius*(1f+(mElevationDimensionInDP/100f));
+
         }
     }
 
@@ -341,7 +344,7 @@ public class BadgeCutOutView extends View {
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
         if (specMode == MeasureSpec.EXACTLY) {
-            result = specSize;
+            result = specSize + (int) mShadowBlurRadius*2;
         } else {
             result = desiredSize;
             if (specMode == MeasureSpec.AT_MOST) {
