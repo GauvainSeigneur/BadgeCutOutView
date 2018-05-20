@@ -6,7 +6,6 @@ Not stable yet.
 
 ## Todo
 * Define shadow bounds according to Material Design 
-* Shadow color as attribute
 
 ## Set up
 ### 1.Gradle 
