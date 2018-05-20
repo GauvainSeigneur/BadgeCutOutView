@@ -6,6 +6,7 @@ Not stable yet.
 
 ## Todo
 * Define shadow bounds according to Material Design 
+* Allow user to manage more deeper alpha of the elevation
 
 ## Set up
 ### 1.Gradle 
