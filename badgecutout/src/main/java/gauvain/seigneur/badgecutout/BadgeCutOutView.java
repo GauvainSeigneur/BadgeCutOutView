@@ -32,6 +32,9 @@ import static android.graphics.Bitmap.Config.ALPHA_8;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.TRANSPARENT;
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
+import static android.graphics.PorterDuff.Mode.ADD;
+import static android.graphics.PorterDuff.Mode.DARKEN;
+import static android.graphics.PorterDuff.Mode.MULTIPLY;
 import static android.graphics.PorterDuff.Mode.SRC_IN;
 
 /**
@@ -48,7 +51,7 @@ public class BadgeCutOutView extends View {
     private int mStrokeColor;
     private boolean mIsIncludeBadgePadding;
     private boolean mIsCenterBadgeText;
-    private float mShadowAlpha=0.5f;
+    private float mShadowAlpha;
     private float mElevationDimension;
     private int mElevationDimensionInDP;
     private int mShadowColor;
@@ -163,18 +166,22 @@ public class BadgeCutOutView extends View {
             mElevationDimension = a.getDimension(R.styleable.BadgeCutOutView_android_elevation,0);
             mElevationDimensionInDP =  (int) (mElevationDimension/ getResources().getDisplayMetrics().density);
             if(mElevationDimensionInDP>25){
-                mShadowBlurRadius= 25*(0.5f*mShadowScale);
+                mShadowBlurRadius= 25*(1f*mShadowScale);
             } else {
-                mShadowBlurRadius=mElevationDimensionInDP*(0.5f*mShadowScale);
+                mShadowBlurRadius=mElevationDimensionInDP*(1f*mShadowScale);
             }
         } else {
             mShadowBlurRadius = 0;
         }
-        if (a.hasValue(R.styleable.BadgeCutOutView_elevationAlpha)) {
-            mShadowAlpha = a.getFloat(R.styleable.BadgeCutOutView_elevationAlpha,0.5f);
+        if (a.hasValue(R.styleable.BadgeCutOutView_shadowAlpha)) {
+            mShadowAlpha = a.getFloat(R.styleable.BadgeCutOutView_shadowAlpha,1f);
+        } else {
+            mShadowAlpha = 1f;
         }
         if (a.hasValue(R.styleable.BadgeCutOutView_shadowColor)) {
             mShadowColor = a.getColor(R.styleable.BadgeCutOutView_shadowColor,BLACK);
+        } else {
+            mShadowColor = BLACK;
         }
         a.recycle();
         //init view first time
@@ -245,7 +252,6 @@ public class BadgeCutOutView extends View {
      * Define stroke rect view according to first RectView and Stroke dimens
      */
     private void defineStrokeRectView () {
-        if (getBadgeStroke()>0) {
             mStrokePaint.setStyle(Paint.Style.STROKE);
             mStrokePaint.setColor(mStrokeColor);
             mStrokePaint.setStrokeWidth(getBadgeStroke());
@@ -253,7 +259,6 @@ public class BadgeCutOutView extends View {
             mStrokeRectF.right = getWidth() - getBadgeStroke()/2-mShadowBlurRadius;
             mStrokeRectF.top = getBadgeStroke() / 2+mShadowBlurRadius;
             mStrokeRectF.bottom = getHeight() - getBadgeStroke() / 2-mShadowBlurRadius;
-        }
     }
 
     /**
@@ -262,15 +267,19 @@ public class BadgeCutOutView extends View {
     private void defineRectShadow () {
         if(mShadowBlurRadius>0f) {
             mShadowPaint.setStyle(Paint.Style.FILL);
-            mShadowPaint.setColorFilter(new PorterDuffColorFilter(mShadowColor, SRC_IN));
+            mShadowPaint.setColorFilter(new PorterDuffColorFilter(mShadowColor, ADD));
             mShadowPaint.setAlpha((int)(255*mShadowAlpha));
             mShadowPaint.setMaskFilter(new BlurMaskFilter(mShadowBlurRadius, BlurMaskFilter.Blur.NORMAL));
             //Position the shadow rect according to the elevation value:
             //Allow visibility of shadow without set blur limit visible to user...
+           /* mShadowRect.left = mShadowBlurRadius;
+            mShadowRect.right = getWidth()-mShadowBlurRadius;
+            mShadowRect.top = mShadowBlurRadius;
+            mShadowRect.bottom = getHeight()-mShadowBlurRadius;*/
+
             mShadowRect.left = mShadowBlurRadius*(1f+(mElevationDimensionInDP/100f));
             mShadowRect.right = getWidth()-mShadowBlurRadius*(1f+(mElevationDimensionInDP/100f));
             mShadowRect.top = mShadowBlurRadius*(1f+(mElevationDimensionInDP/100f));
-            mShadowRect.bottom = getHeight()-mShadowBlurRadius*(1f+(mElevationDimensionInDP/100f));
 
         }
     }
@@ -322,10 +331,12 @@ public class BadgeCutOutView extends View {
                 setStrokeCornerRadius(),
                 mStrokePaint);
         //draw stroke rect
-        mCutoutCanvas.drawRoundRect(mStrokeRectF,
-                setStrokeCornerRadius(),
-                setStrokeCornerRadius(),
-                mStrokePaint);
+        if(getBadgeStroke()>0) {
+            mCutoutCanvas.drawRoundRect(mStrokeRectF,
+                    setStrokeCornerRadius(),
+                    setStrokeCornerRadius(),
+                    mStrokePaint);
+        }
         //text inside the inner rectf
         mCutoutCanvas.drawText(
                 mText,

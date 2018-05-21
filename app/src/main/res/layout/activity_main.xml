@@ -8,10 +8,35 @@
     android:background="#FFFFFF"
     tools:context=".MainActivity">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorAccent"
+        android:elevation="16dp"
+        android:text="LABEL" />
+
     <gauvain.seigneur.badgecutout.BadgeCutOutView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        app:cornerRadius="48dp"
+        app:textSize="24sp"
+        app:centerBadgeText="true"
+        app:badgeStroke="0dp"
+        app:strokeColor="@color/colorPrimary"
+        app:backgroundColor="@color/colorAccent"
+        app:includeBadgePadding="true"
+        android:padding="4dp"
+        android:elevation="16dp"
+        app:shadowAlpha="1"
+        app:shadowColor="@color/colorPrimaryDark"
+        app:shadowScale="1"
+        android:text="LABEL"/>
+
+    <gauvain.seigneur.badgecutout.BadgeCutOutView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         app:cornerRadius="48dp"
         app:textSize="24sp"
         app:centerBadgeText="true"
@@ -21,9 +46,9 @@
         app:includeBadgePadding="true"
         android:padding="4dp"
         android:elevation="16dp"
-        app:elevationAlpha="1"
-        app:shadowColor="@color/colorAccent"
-        app:shadowScale="2"
+        app:shadowAlpha="1"
+        app:shadowColor="#000000"
+        app:shadowScale="4"
         android:text="LABEL"/>
 
 </FrameLayout>

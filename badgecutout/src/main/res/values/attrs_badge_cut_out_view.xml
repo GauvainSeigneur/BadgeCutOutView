@@ -11,7 +11,7 @@
         <attr name="textSize"               format="dimension"  />
         <attr name="android:fontFamily"                         />
         <attr name="android:elevation"      format="dimension"  />
-        <attr name="elevationAlpha"         format="float"      />
+        <attr name="shadowAlpha"            format="float"      />
         <attr name="shadowColor"            format="color"      />
         <attr name="shadowScale"            format="float"      />
     </declare-styleable>
