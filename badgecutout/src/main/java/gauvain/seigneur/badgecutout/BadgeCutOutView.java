@@ -35,6 +35,7 @@ import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 import static android.graphics.PorterDuff.Mode.ADD;
 import static android.graphics.PorterDuff.Mode.DARKEN;
 import static android.graphics.PorterDuff.Mode.MULTIPLY;
+import static android.graphics.PorterDuff.Mode.SRC;
 import static android.graphics.PorterDuff.Mode.SRC_IN;
 
 /**
@@ -267,7 +268,7 @@ public class BadgeCutOutView extends View {
     private void defineRectShadow () {
         if(mShadowBlurRadius>0f) {
             mShadowPaint.setStyle(Paint.Style.FILL);
-            mShadowPaint.setColorFilter(new PorterDuffColorFilter(mShadowColor, ADD));
+            mShadowPaint.setColorFilter(new PorterDuffColorFilter(mShadowColor, SRC_IN));
             mShadowPaint.setAlpha((int)(255*mShadowAlpha));
             mShadowPaint.setMaskFilter(new BlurMaskFilter(mShadowBlurRadius, BlurMaskFilter.Blur.NORMAL));
             //Position the shadow rect according to the elevation value:
@@ -280,6 +281,8 @@ public class BadgeCutOutView extends View {
             mShadowRect.left = mShadowBlurRadius*(1f+(mElevationDimensionInDP/100f));
             mShadowRect.right = getWidth()-mShadowBlurRadius*(1f+(mElevationDimensionInDP/100f));
             mShadowRect.top = mShadowBlurRadius*(1f+(mElevationDimensionInDP/100f));
+            mShadowRect.bottom = getHeight()-mShadowBlurRadius*(1f+(mElevationDimensionInDP/100f));
+
 
         }
     }
